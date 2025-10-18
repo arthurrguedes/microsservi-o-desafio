@@ -3,7 +3,6 @@ import morgan from 'morgan';
 import { createProxyMiddleware } from 'http-proxy-middleware';
 
 const app = express();
-app.use(express.json());
 app.use(morgan('dev'));
 
 const PORT = process.env.PORT || 3000;
@@ -17,14 +16,16 @@ app.get('/health', (req, res) => res.json({ ok: true, service: 'gateway' }));
 app.use('/users', createProxyMiddleware({
   target: USERS_URL,
   changeOrigin: true,
-  pathRewrite: {'^/users': ''}
+  //pathRewrite: {'^/users': ''}
 }));
 
 app.use('/orders', createProxyMiddleware({
   target: ORDERS_URL,
   changeOrigin: true,
-  pathRewrite: {'^/orders': ''}
+  //pathRewrite: {'^/orders': ''}
 }));
+
+app.use(express.json());
 
 app.listen(PORT, () => {
   console.log(`[gateway] listening on http://localhost:${PORT}`);
